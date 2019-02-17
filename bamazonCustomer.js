@@ -35,7 +35,7 @@ function displayAll() {
       //New instance of our constructor
       var theDisplayTable = new Table({
           //declare the value categories
-          head:  ['Item ID', 'Product Name', 'Department', 'Price', 'Quantity'],
+          head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
           //set widths to scale
           colWidths: [10, 30, 18, 10, 14]
       });
