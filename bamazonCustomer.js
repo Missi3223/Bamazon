@@ -1,7 +1,7 @@
 var mysql = require ('mysql');
 var inquirer = require ('inquirer');
 var Table = require ('cli-table');
-var chalk = require ('chalk');
+var colors = require ('colors');
 
 var connection = mysql.createConnection({
   host: "localhost",
