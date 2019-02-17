@@ -35,15 +35,15 @@ function displayAll() {
       //New instance of our constructor
       var theDisplayTable = new Table({
           //declare the value categories
-          head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
+          head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan, 'Product Sales Total'.cyan],
           //set widths to scale
-          colWidths: [10, 30, 18, 10, 14]
+          colWidths: [10, 30, 18, 10, 14, 25]
       });
       //for each row of the loop
       for (i = 0; i < response.length; i++) {
           //push data to table
           theDisplayTable.push(
-              [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity]
+              [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity, "$" + response[i].product_sales]
           );
       }
       //log the completed table to console
@@ -90,13 +90,38 @@ function purchaseFromDatabase(ID, quantityNeeded) {
             console.log("We have you covered! ");
             console.log("Your total cost for " + quantityNeeded + " " + response[0].product_name + " is $" + totalCost + ". Thank you for shopping at Bamazon!");
             //update database, minus purchased quantity
-            connection.query('UPDATE bamazon_db.products SET stock_quantity = stock_quantity - ' + quantityNeeded + ' WHERE item_id = ' + ID);
+            connection.query('UPDATE bamazon_db.products SET stock_quantity = stock_quantity - ' + quantityNeeded + ', product_sales = product_sales + '+ totalCost +' WHERE item_id = ' + ID);
+            
         } else {
             console.log("OH NO!!!!  We are sold out of " + response[0].product_name + " and are unable to fulfill your order.");
         };
-        continueShopping();
+       displayUpdate();
     });
 };
+function displayUpdate() {
+    //show all ids, names, and products from database.
+    connection.query('SELECT * FROM bamazon_db.products', function(error, response) {
+        if (error) { console.log(error) };
+        //New instance of our constructor
+        var theDisplayTable = new Table({
+            //declare the value categories
+            head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan, 'Product Sales Total'.cyan],
+            //set widths to scale
+            colWidths: [10, 30, 18, 10, 14, 25]
+        });
+        //for each row of the loop
+        for (i = 0; i < response.length; i++) {
+            //push data to table
+            theDisplayTable.push(
+                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity, "$" + response[i].product_sales]
+            );
+        }
+        //log the completed table to console
+        console.log(theDisplayTable.toString());   
+        continueShopping();
+    })
+};
+
 function continueShopping(){
     inquirer.prompt(
         {
@@ -112,7 +137,9 @@ function continueShopping(){
        if (answers.response === "No")
             displayAll();
            
-            
+           else (connection.end());
+           
+           
        })
        
     };
