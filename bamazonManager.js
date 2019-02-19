@@ -72,15 +72,15 @@ function displayAll() {
         //New instance of our constructor
         var theDisplayTable = new Table({
             //declare the value categories
-            head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
+            head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan,'Product Sales'.cyan],
             //set widths to scale
-            colWidths: [10, 30, 18, 10, 14]
+            colWidths: [10, 30, 18, 10, 14,25]
         });
         //for each row of the loop
         for (i = 0; i < response.length; i++) {
             //push data to table
             theDisplayTable.push(
-                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity ]
+                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity,"$"+ response[i].product_sales ]
             );
         }
         //log the completed table to console
@@ -95,15 +95,15 @@ function lowInventory(){
     
         var theDisplayTable = new Table({
             //declare the value categories
-            head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
+            head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan, 'Product Sales'.cyan],
             //set widths to scale
-            colWidths: [10, 30, 18, 10, 14]
+            colWidths: [10, 30, 18, 10, 14,25]
         });
         //for each row of the loop
         for (i = 0; i < response.length; i++) {
             //push data to table
             theDisplayTable.push(
-                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity ]
+                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity,"$"+ response[i].product_sales ]
             );
         }
         //log the completed table to console
@@ -134,22 +134,24 @@ function addInventory(){
     }; 
     
     //runs on user parameters from the request function
-    function updateDataBase(id, quant) {
+    function updateDataBase(id, quantityAdded) {
         //update the database
         connection.query('SELECT * FROM bamazon_db.products WHERE item_id = ' + id, function(error, response) {
             if (error) { console.log(error) };
-            connection.query('UPDATE bamazon_db.products SET stock_quantity = stock_quantity + '+quant + ' WHERE item_id = ' + id);
+            connection.query('UPDATE bamazon_db.products SET stock_quantity = stock_quantity + '+ quantityAdded + ' WHERE item_id = ' + id);
+            connection.query('SELECT * FROM bamazon_db.products WHERE item_id = ' + id, function(error, response) {
+                if (error) { console.log(error) };
             var theDisplayTable = new Table({
                 //declare the value categories
-                head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
+                head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan, 'Product Sales'.cyan],
                 //set widths to scale
-                colWidths: [10, 30, 18, 10, 14]
+                colWidths: [10, 30, 18, 10, 14,25]
             });
             //for each row of the loop
             for (i = 0; i < response.length; i++) {
                 //push data to table
                 theDisplayTable.push(
-                    [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity ]
+                    [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity,"$"+ response[i].product_sales ]
                 );
             }
             //log the completed table to console
@@ -157,7 +159,8 @@ function addInventory(){
             console.log(theDisplayTable.toString());
             runSearch(); 
         });
-    }; 
+    })
+}; 
 
     function newProduct(){
         inquirer.prompt([
@@ -194,30 +197,31 @@ function addInventory(){
 
             function addNewItem(name,department,price,quantity){
                 //query database, insert new item
-                connection.query('SELECT * FROM bamazon_db.products ', function(error, response) {
+                connection.query('SELECT * FROM bamazon_db.products', function(error, response) {
                     if (error) { console.log(error) };
-                connection.query("INSERT INTO bamazon_db.products (product_name,department_name,price,stock_quantity) VALUES('name', 'department' , 'price',  'quantity')"); 
-
+                connection.query("INSERT INTO bamazon_db.products (product_name,department_name,price,stock_quantity) VALUES ('" + name + "','" +  department +  "'," + price + ',' + quantity + ")"); 
+                connection.query('SELECT * FROM bamazon_db.products', function(error, response) {
+                    if (error) { console.log(error) };
                 var theDisplayTable = new Table({
                     //declare the value categories
-                    head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan],
+                    head:  ['Item ID'.cyan, 'Product Name'.cyan, 'Department'.cyan, 'Price'.cyan, 'Quantity'.cyan,'Product Sales'.cyan],
                     //set widths to scale
-                    colWidths: [10, 30, 18, 10, 14]
+                    colWidths: [10, 30, 18, 10, 14,25]
                 });
                 //for each row of the loop
                 for (i = 0; i < response.length; i++) {
                     //push data to table
                     theDisplayTable.push(
-                        [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity ]
+                        [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity, "$"+ response[i].product_sales ]
                     );
                 }
                 //log the completed table to console
                 console.log("\n-----------------------------------------------------\n")   
                 console.log(theDisplayTable.toString()); 
-                 
                 runSearch();            
             }); 
-        } 
+        })
+    } 
     
              
        

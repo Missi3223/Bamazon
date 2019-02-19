@@ -113,7 +113,7 @@ function displayUpdate() {
         for (i = 0; i < response.length; i++) {
             //push data to table
             theDisplayTable.push(
-                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity, "$" + response[i].product_sales]
+                [response[i].item_id, response[i].product_name, response[i].department_name,"$"+ response[i].price, response[i].stock_quantity, "$"+ response[i].product_sales ]
             );
         }
         //log the completed table to console
