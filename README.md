@@ -4,7 +4,7 @@
 
 _Customer View:_
 
-![Finished Assignment](./images/Bamazon_Demo.mp4 "Finished Result")
+- ![Finished Assignment](./images/Bamazon_Demo.mp4/ "Finished Result")
 
 - [X] Create a MySQL Database called bamazon.
 - [X] Then create a Table inside of that database called products.
