@@ -4,7 +4,7 @@
 
 _Customer View:_
 
-- ![](./images/Bamazon_Demo.mp4)
+- ![Finished](./images/Bamazon_Demo.gif)
 
 - [X] Create a MySQL Database called bamazon.
 - [X] Then create a Table inside of that database called products.
